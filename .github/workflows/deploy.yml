@@ -1,0 +1,45 @@
+name: Deploy to Google Cloud
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@2
+        with:
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: c241-ps478
+
+      - name: Download models
+        run: |
+          gsutil cp -r gs://c241-ps478/models/ models/
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: false
+          tags: asia-east1-docker.pkg.dev/c241-ps478/waterwise-ml:latest
+
+      - name: Push to Google Artifact Registry
+        run: |
+          gcloud auth configure-docker asia-east1-docker.pkg.dev
+          docker push asia-east1-docker.pkg.dev/c241-ps478/waterwise-ml:latest
+
+      - name: Deploy to Google Run
+        run: |
+          gcloud run deploy water-wise-ml \
+            --image asia-east1-docker.pkg.dev/c241-ps478/waterwise-ml:latest \
+            --platform managed \
+            --region asia-east1 \
+            --allow-unauthenticated
