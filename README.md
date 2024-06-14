@@ -26,7 +26,7 @@ pip install -r requirements.txt
 Run the service.
 
 ```bash
-python app.py
+python main.py
 ```
 
 The service will be running on `http://localhost:5000`.
@@ -43,6 +43,12 @@ Run the Docker container.
 
 ```bash
 docker run -p 5000:5000 ml-service
+```
+
+Docker Compose can also be used.
+
+```bash
+docker compose up --build
 ```
 
 You can also use Buildpacks to deploy the service to Google Cloud.
