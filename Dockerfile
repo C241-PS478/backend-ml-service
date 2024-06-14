@@ -4,6 +4,7 @@ FROM python:3.12
 COPY . /app
 WORKDIR /app
 
+RUN apt update && apt install libgl1 -y
 RUN pip3 install --upgrade pip
 RUN pip3 install -r requirements.txt
 
