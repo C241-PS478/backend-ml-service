@@ -42,9 +42,7 @@ docker build -t ml-service .
 Run the Docker container.
 
 ```bash
-docker run -p 8080:8080 ml-service
-# ...or set PORT environment variable for custom port
-docker run -e PORT=80 -p 80:80 ml-service
+docker run -p 5000:5000 ml-service
 ```
 
 You can also use Buildpacks to deploy the service to Google Cloud.
