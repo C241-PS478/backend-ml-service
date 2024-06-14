@@ -25,7 +25,7 @@ jobs:
 
       - name: Download models
         run: |
-          gsutil cp -r gs://waterwise/models/ modelsx/
+          gsutil cp -r gs://waterwise/models/ models/
 
       - name: Build Docker image
         uses: docker/build-push-action@v5
