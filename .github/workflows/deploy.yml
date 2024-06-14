@@ -24,7 +24,7 @@ jobs:
           project_id: c241-ps478
 
       - name: Download models
-        run: gcloud storage cp -r gs://waterwise/models/ models/
+        run: gcloud storage cp -r gs://waterwise/models/* models/
 
       - name: Build Docker image
         uses: docker/build-push-action@v5
