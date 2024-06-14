@@ -13,15 +13,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Put Service Accounts key into a file
+        run: |
+          echo '${{ secrets.GCP_SA_KEY }}' > /tmp/gcp_sa_key.json
+
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: /tmp/gcp_sa_key.json
+
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
         with:
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
           project_id: c241-ps478
 
       - name: Download models
         run: |
-          gsutil cp -r gs://c241-ps478/models/ models/
+          gsutil cp -r gs://waterwise/models/ models/
 
       - name: Build Docker image
         uses: docker/build-push-action@v5
