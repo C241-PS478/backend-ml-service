@@ -33,17 +33,17 @@ jobs:
           context: .
           file: ./Dockerfile
           push: false
-          tags: asia-east1-docker.pkg.dev/c241-ps478/waterwise-ml:latest
+          tags: asia-east1-docker.pkg.dev/c241-ps478/waterwise/ml-service:latest
 
       - name: Push to Google Artifact Registry
         run: |
           gcloud auth configure-docker asia-east1-docker.pkg.dev
-          docker push asia-east1-docker.pkg.dev/c241-ps478/waterwise-ml:latest
+          docker push asia-east1-docker.pkg.dev/c241-ps478/waterwise/ml-service:latest
 
       - name: Deploy to Google Run
         run: |
           gcloud run deploy water-wise-ml \
-            --image asia-east1-docker.pkg.dev/c241-ps478/waterwise-ml:latest \
+            --image asia-east1-docker.pkg.dev/c241-ps478/waterwise/ml-service:latest \
             --platform managed \
             --region asia-east1 \
             --allow-unauthenticated
