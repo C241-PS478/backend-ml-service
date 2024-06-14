@@ -24,8 +24,7 @@ jobs:
           project_id: c241-ps478
 
       - name: Download models
-        run: |
-          gsutil cp -r gs://waterwise/models/ models/
+        run: gcloud storage cp -r gs://waterwise/models/ models/
 
       - name: Build Docker image
         uses: docker/build-push-action@v5
@@ -44,7 +43,6 @@ jobs:
         run: |
           gcloud run deploy waterwise-ml \
             --image asia-east1-docker.pkg.dev/c241-ps478/waterwise/ml-service:latest \
-            --platform managed \
             --region asia-east1 \
             --allow-unauthenticated \
             --port 5000
