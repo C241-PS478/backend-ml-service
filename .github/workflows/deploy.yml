@@ -13,14 +13,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Put Service Account key into a file
-        run:
-          echo ${{ secrets.GCP_SA_KEY }} | base64 --decode > /tmp/gcp_sa_key.json
-
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: /tmp/gcp_sa_key.json
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
 
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
@@ -29,7 +25,7 @@ jobs:
 
       - name: Download models
         run: |
-          gsutil cp -r gs://waterwise/models/ models/
+          gsutil cp -r gs://waterwise/models/ modelsx/
 
       - name: Build Docker image
         uses: docker/build-push-action@v5
