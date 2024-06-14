@@ -1,8 +1,11 @@
-import pickle
 import flask
-from flask import request
-from services import water_segmentation
 import datetime
+import numpy as np
+import cv2
+from io import BytesIO
+
+from services import clean_water
+
 
 app = flask.Flask(__name__)
 
@@ -17,12 +20,25 @@ def index():
 
 @app.route('/clean-water', methods=['POST'])
 def predict():
-    # TODO
-    img = None
 
-    prediction = water_segmentation.predict(img)
+    img = flask.request.files.get('image', None)
+    if not img:
+        response = {
+            "message": "No image found"
+        }
+        return flask.jsonify(response), 400
     
-    return flask.jsonify(prediction)
+    file_stream = BytesIO(img.read())
+    file_bytes = np.asarray(bytearray(file_stream.read()), dtype=np.uint8)
+    img = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
+    prediction = clean_water.predict(img)
+
+    return flask.jsonify({
+        "message": "Prediction successful",
+        "data": {
+            "prediction": float(prediction[0][0])
+        }
+    })
 
 def create_app():
    return app
