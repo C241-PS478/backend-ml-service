@@ -13,14 +13,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v2
         with:
@@ -42,6 +34,8 @@ jobs:
           file: ./Dockerfile
           push: false
           tags: asia-east1-docker.pkg.dev/c241-ps478/waterwise/ml-service:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Push to Google Artifact Registry
         run: |
@@ -54,4 +48,5 @@ jobs:
             --image asia-east1-docker.pkg.dev/c241-ps478/waterwise/ml-service:latest \
             --platform managed \
             --region asia-east1 \
-            --allow-unauthenticated
+            --allow-unauthenticated \
+            --port 5000
