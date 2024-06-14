@@ -42,7 +42,7 @@ jobs:
 
       - name: Deploy to Google Run
         run: |
-          gcloud run deploy water-wise-ml \
+          gcloud run deploy waterwise-ml \
             --image asia-east1-docker.pkg.dev/c241-ps478/waterwise/ml-service:latest \
             --platform managed \
             --region asia-east1 \
