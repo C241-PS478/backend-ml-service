@@ -34,8 +34,6 @@ jobs:
           file: ./Dockerfile
           push: false
           tags: asia-east1-docker.pkg.dev/c241-ps478/waterwise/ml-service:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
       - name: Push to Google Artifact Registry
         run: |
