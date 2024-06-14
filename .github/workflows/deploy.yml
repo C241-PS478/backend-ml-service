@@ -7,6 +7,7 @@ on:
 
 jobs:
   deploy:
+    name: Deploy
     runs-on: ubuntu-latest
 
     steps:
@@ -45,4 +46,6 @@ jobs:
             --image asia-east1-docker.pkg.dev/c241-ps478/waterwise/ml-service:latest \
             --region asia-east1 \
             --allow-unauthenticated \
+            --memory 2Gi \
+            --max-instances 1 \
             --port 5000
