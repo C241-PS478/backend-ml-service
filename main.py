@@ -4,7 +4,7 @@ import numpy as np
 import cv2
 from io import BytesIO
 
-from services import clean_water, water_segmentation
+from services import clean_water, water_segmentation, potability_iot
 
 
 app = flask.Flask(__name__)
@@ -12,7 +12,7 @@ app = flask.Flask(__name__)
 @app.route('/', methods=['GET'])
 def index():
     return flask.jsonify({
-        "message": "WaterWise REST API ML Service",
+        "message": "WaterWise ML Service",
         "data": {
             "time": datetime.datetime.now()
         }
@@ -79,6 +79,39 @@ def predict_clean_water_full():
     extracted_img = water_segmentation.extract(img)
 
     prediction = clean_water.predict(extracted_img)
+
+    return flask.jsonify({
+        "message": "Prediction successful",
+        "data": {
+            "prediction": float(prediction[0][0])
+        }
+    })
+
+@app.route('/potability-iot', methods=['POST'])
+def predict_potability_iot():
+
+    if flask.request.form:
+        data = flask.request.form
+    else:
+        data = flask.request.json
+
+    print(data)
+    print(data['solids'])
+    print(data['turbidity'])
+    print(data['chloramines'])
+    print(data['organic_carbon'])
+    print(data['sulfate'])
+    print(data['ph'])
+    
+
+    prediction = potability_iot.predict(
+        solids=float(data['solids']),
+        turbidity=float(data['turbidity']),
+        chloramines=float(data['chloramines']),
+        organic_carbon=float(data['organic_carbon']),
+        sulfate=float(data['sulfate']),
+        ph=float(data['ph'])
+    )
 
     return flask.jsonify({
         "message": "Prediction successful",

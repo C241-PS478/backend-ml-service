@@ -1,4 +1,4 @@
-# WaterWise REST API ML Service
+# WaterWise ML Service
 
 This is the REST API service for the machine learning models for the WaterWise project.
 
@@ -7,6 +7,7 @@ This is the REST API service for the machine learning models for the WaterWise p
 - `POST /water-segmentation`: Segment/extract the water from the image. Returns an image.
 - `POST /clean-water`: Predict if the water is clean or not. Returns a float value from 0 to 1. Values above 0.5 indicate clean water.
 - `POST /clean-water/with-extraction`: Predict if the water is clean or not and extract the water from the image. Returns a float value from 0 to 1. Values above 0.5 indicate clean water.
+- `POST /potability-iot`: Predict if the water is drinkable or not (potability). Returns either 0 or 1. 1 indicate clean water.
 
 ## Usage
 
@@ -15,6 +16,7 @@ Prepare the models. Place the models in the [models](models) folder.
 ```bash
 wget "https://example.com/models/clean-water.h5" -O "clean-water.h5"
 wget "https://example.com/models/water-segmentation.pth" -O "water-segmentation.pth"
+wget "https://example.com/models/potability-iot.h5" -O "potability-iot.h5"
 ```
 
 Install the required packages using pip.
