@@ -207,8 +207,19 @@ def extract(original_image: cv2.typing.MatLike):
         water_only_enlarged = cv2.bitwise_and(water_only_large, water_only_large, mask=enlarged_water_contour_mask)
 
         # Inpaint the extracted water region in the enlarged image
-        inpaint_mask_large = cv2.bitwise_not(enlarged_water_contour_mask)
-        inpainted_image_large = cv2.inpaint(water_only_large, inpaint_mask_large, inpaintRadius=3, flags=cv2.INPAINT_TELEA)
+        white_pixels_count = np.sum(enlarged_water_contour_mask == 255)
+        total_pixels_count = enlarged_water_contour_mask.size
+        coverage_percentage = (white_pixels_count / total_pixels_count) * 100
+
+        # Inpaint the extracted water region in the enlarged image or make it full white if coverage < 25%
+        if coverage_percentage < 25:
+            inpainted_image_large = np.ones_like(water_only_large) * 255
+        else:
+            inpaint_mask_large = cv2.bitwise_not(enlarged_water_contour_mask)
+            inpainted_image_large = cv2.inpaint(water_only_large, inpaint_mask_large, inpaintRadius=3, flags=cv2.INPAINT_TELEA)
+
+        # inpaint_mask_large = cv2.bitwise_not(enlarged_water_contour_mask)
+        # inpainted_image_large = cv2.inpaint(water_only_large, inpaint_mask_large, inpaintRadius=3, flags=cv2.INPAINT_TELEA)
     else:
         water_only_large = None
         overlay_large = None
