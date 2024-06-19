@@ -24,7 +24,7 @@ def get_extracted_water():
     img = flask.request.files.get('image', None)
     if not img:
         response = {
-            "message": "No image found"
+            "message": "No image found."
         }
         return flask.jsonify(response), 400
     
@@ -32,6 +32,12 @@ def get_extracted_water():
     file_bytes = np.asarray(bytearray(file_stream.read()), dtype=np.uint8)
     img = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
     img_extracted, img_overlay = water_segmentation.extract(img)
+
+    if img_extracted is None:
+        response = {
+            "message": "Not enough water is detected."
+        }
+        return flask.jsonify(response), 400
 
     retval_extracted, buffer_extracted = cv2.imencode('.png', img_extracted)
     
@@ -46,7 +52,7 @@ def get_water_overlay():
     img = flask.request.files.get('image', None)
     if not img:
         response = {
-            "message": "No image found"
+            "message": "No image found."
         }
         return flask.jsonify(response), 400
     
@@ -68,7 +74,7 @@ def predict_clean_water():
     img = flask.request.files.get('image', None)
     if not img:
         response = {
-            "message": "No image found"
+            "message": "No image found."
         }
         return flask.jsonify(response), 400
     
@@ -78,7 +84,7 @@ def predict_clean_water():
     prediction = clean_water.predict(img)
 
     return flask.jsonify({
-        "message": "Prediction successful",
+        "message": "Prediction successful.",
         "data": {
             "prediction": float(prediction[0][0])
         }
@@ -90,7 +96,7 @@ def predict_clean_water_full():
     img = flask.request.files.get('image', None)
     if not img:
         response = {
-            "message": "No image found"
+            "message": "No image found."
         }
         return flask.jsonify(response), 400
     
@@ -100,10 +106,16 @@ def predict_clean_water_full():
 
     img_extracted, overlay_img = water_segmentation.extract(img)
 
+    if img_extracted is None:
+        response = {
+            "message": "Not enough water is detected."
+        }
+        return flask.jsonify(response), 400
+
     prediction = clean_water.predict(img_extracted)
 
     return flask.jsonify({
-        "message": "Prediction successful",
+        "message": "Prediction successful.",
         "data": {
             "prediction": float(prediction[0][0])
         }
@@ -136,7 +148,7 @@ def predict_potability_iot():
     )
 
     return flask.jsonify({
-        "message": "Prediction successful",
+        "message": "Prediction successful.",
         "data": {
             "prediction": float(prediction[0][0])
         }

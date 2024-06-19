@@ -198,13 +198,13 @@ def extract(original_image: cv2.typing.MatLike):
 
         # Apply the red mask only to the enlarged water regions
         enlarged_water_contour_mask = enlarged_mask[y:y+h, x:x+w]
-        red_masked_image_large = cv2.bitwise_and(red_overlay_large, red_overlay_large, mask=enlarged_water_contour_mask)
+        # red_masked_image_large = cv2.bitwise_and(red_overlay_large, red_overlay_large, mask=enlarged_water_contour_mask)
 
         # Combine the enlarged original image with the red masked image
-        overlay_large = cv2.addWeighted(water_only_large, 1, red_masked_image_large, 0.5, 0)
+        # overlay_large = cv2.addWeighted(water_only_large, 1, red_masked_image_large, 0.5, 0)
 
         # Extract the water region in the enlarged image
-        water_only_enlarged = cv2.bitwise_and(water_only_large, water_only_large, mask=enlarged_water_contour_mask)
+        # water_only_enlarged = cv2.bitwise_and(water_only_large, water_only_large, mask=enlarged_water_contour_mask)
 
         # Inpaint the extracted water region in the enlarged image
         white_pixels_count = np.sum(enlarged_water_contour_mask == 255)
@@ -213,7 +213,8 @@ def extract(original_image: cv2.typing.MatLike):
 
         # Inpaint the extracted water region in the enlarged image or make it full white if coverage < 25%
         if coverage_percentage < 25:
-            inpainted_image_large = np.ones_like(water_only_large) * 255
+            return None, cv2.cvtColor(overlay, cv2.COLOR_BGR2RGB)
+            # inpainted_image_large = np.ones_like(water_only_large) * 255
         else:
             inpaint_mask_large = cv2.bitwise_not(enlarged_water_contour_mask)
             inpainted_image_large = cv2.inpaint(water_only_large, inpaint_mask_large, inpaintRadius=3, flags=cv2.INPAINT_TELEA)
@@ -222,9 +223,9 @@ def extract(original_image: cv2.typing.MatLike):
         # inpainted_image_large = cv2.inpaint(water_only_large, inpaint_mask_large, inpaintRadius=3, flags=cv2.INPAINT_TELEA)
     else:
         water_only_large = None
-        overlay_large = None
+        # overlay_large = None
         enlarged_water_contour_mask = None
-        water_only_enlarged = None
+        # water_only_enlarged = None
         inpainted_image_large = None
 
     # Create a red overlay for the water regions
@@ -243,7 +244,7 @@ def extract(original_image: cv2.typing.MatLike):
     cv2.drawContours(overlay, contours, -1, (0, 255, 0), 2)
 
     if water_only_large is None:
-        return original_image_pil, cv2.cvtColor(overlay, cv2.COLOR_BGR2RGB)
+        return None, cv2.cvtColor(overlay, cv2.COLOR_BGR2RGB)
 
     # Use the mask to extract the water region
     # water_only = cv2.bitwise_and(original_image, original_image, mask=water_contour_mask)
