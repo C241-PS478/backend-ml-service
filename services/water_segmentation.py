@@ -213,7 +213,7 @@ def extract(original_image: cv2.typing.MatLike):
 
         # Inpaint the extracted water region in the enlarged image or make it full white if coverage < 25%
         if coverage_percentage < 25:
-            return None, cv2.cvtColor(overlay, cv2.COLOR_BGR2RGB)
+            return None, overlay
             # inpainted_image_large = np.ones_like(water_only_large) * 255
         else:
             inpaint_mask_large = cv2.bitwise_not(enlarged_water_contour_mask)
@@ -265,4 +265,4 @@ def extract(original_image: cv2.typing.MatLike):
     #     plt.imshow(cv2.cvtColor(inpainted_image_large, cv2.COLOR_BGR2RGB)), plt.title('Inpainted Extracted Water on Enlarged Region')
     # plt.show()
     
-    return cv2.cvtColor(inpainted_image_large, cv2.COLOR_BGR2RGB), cv2.cvtColor(overlay, cv2.COLOR_BGR2RGB)
+    return inpainted_image_large, overlay
